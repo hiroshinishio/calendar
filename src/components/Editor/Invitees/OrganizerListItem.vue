@@ -18,24 +18,47 @@
 		<div class="invitees-list-item__organizer-hint">
 			{{ $t('calendar', '(organizer)') }}
 		</div>
+		<div class="invitees-list-item__actions">
+			<NcActions v-if="!isReadOnly && isSharedWithMe">
+				<NcActionRadio v-for="person in organizerSelection"
+					name="organizerSelector"
+					:key="person.address"
+					:checked="selectedOrganizer(person.address)"
+					@change="changeOrganizer(person)">
+					{{ person.label }}
+				</NcActionRadio>
+			</NcActions>
+		</div>
 	</div>
 </template>
 
 <script>
 import AvatarParticipationStatus from '../AvatarParticipationStatus.vue'
 import { removeMailtoPrefix } from '../../../utils/attendee.js'
+import NcActions from '@nextcloud/vue/dist/Components/NcActions.js'
+import NcActionRadio from '@nextcloud/vue/dist/Components/NcActionRadio.js'
 
 export default {
 	name: 'OrganizerListItem',
 	components: {
 		AvatarParticipationStatus,
+		NcActions,
+		NcActionRadio,
 	},
 	props: {
 		organizer: {
 			type: Object,
 			required: true,
 		},
+		organizerSelection: {
+			type: Array,
+			required: true,
+		},
 		isReadOnly: {
+			type: Boolean,
+			required: true,
+		},
+		isSharedWithMe: {
 			type: Boolean,
 			required: true,
 		},
@@ -69,6 +92,17 @@ export default {
 		isResource() {
 			// The organizer does not have a tooltip
 			return false
+		},
+	},
+	methods: {
+		selectedOrganizer(address) {
+			if (removeMailtoPrefix(this.organizer.uri) === address) {
+				return true
+			}
+			return false
+		},
+		changeOrganizer(person) {
+			this.$emit('change-organizer', person)
 		},
 	},
 }
