@@ -257,8 +257,7 @@ export default {
 					label: user.commonName,
 					address: removeMailtoPrefix(user.uri)
 				}
-			}
-			else if (this.principalsStore.getCurrentUserPrincipal !== null) {
+			} else if (this.principalsStore.getCurrentUserPrincipal !== null) {
 				const user = this.principalsStore.getCurrentUserPrincipal
 				organizer = {
 					label: user.displayname,
