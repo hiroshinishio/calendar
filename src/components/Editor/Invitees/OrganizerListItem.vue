@@ -20,13 +20,14 @@
 		</div>
 		<div class="invitees-list-item__actions">
 			<NcActions v-if="!isReadOnly && isSharedWithMe">
-				<NcActionRadio v-for="person in organizerSelection"
-					name="organizerSelector"
+				<NcActionButton v-for="person in organizerSelection" v-show="!selectedOrganizer(person.address)"
 					:key="person.address"
-					:checked="selectedOrganizer(person.address)"
-					@change="changeOrganizer(person)">
-					{{ person.label }}
-				</NcActionRadio>
+					@click="changeOrganizer(person)">
+					<template #icon>
+						<Crown :size="20" />
+					</template>
+					{{ $t('calendar', 'Promote {label} to Organizer', {label: person.label}) }}
+				</NcActionButton>
 			</NcActions>
 		</div>
 	</div>
@@ -34,16 +35,18 @@
 
 <script>
 import AvatarParticipationStatus from '../AvatarParticipationStatus.vue'
+import Crown from 'vue-material-design-icons/Crown.vue'
 import { removeMailtoPrefix } from '../../../utils/attendee.js'
 import NcActions from '@nextcloud/vue/dist/Components/NcActions.js'
-import NcActionRadio from '@nextcloud/vue/dist/Components/NcActionRadio.js'
+import NcActionButton from '@nextcloud/vue/dist/Components/NcActionButton.js'
 
 export default {
 	name: 'OrganizerListItem',
 	components: {
 		AvatarParticipationStatus,
+		Crown,
 		NcActions,
-		NcActionRadio,
+		NcActionButton,
 	},
 	props: {
 		organizer: {
