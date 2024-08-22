@@ -20,7 +20,8 @@
 		</div>
 		<div class="invitees-list-item__actions">
 			<NcActions v-if="!isReadOnly && isSharedWithMe">
-				<NcActionButton v-for="person in organizerSelection" v-show="!selectedOrganizer(person.address)"
+				<NcActionButton v-for="person in organizerSelection"
+					v-show="!selectedOrganizer(person.address)"
 					:key="person.address"
 					:closeAfterClick = "true"
 					@click="changeOrganizer(person)">
