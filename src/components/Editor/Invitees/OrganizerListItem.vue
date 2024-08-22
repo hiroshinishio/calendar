@@ -22,11 +22,12 @@
 			<NcActions v-if="!isReadOnly && isSharedWithMe">
 				<NcActionButton v-for="person in organizerSelection" v-show="!selectedOrganizer(person.address)"
 					:key="person.address"
+					:closeAfterClick = "true"
 					@click="changeOrganizer(person)">
 					<template #icon>
 						<Crown :size="20" />
 					</template>
-					{{ $t('calendar', 'Promote {label} to Organizer', {label: person.label}) }}
+					{{ $t('calendar', 'Make {label} the organizer', {label: person.label}) }}
 				</NcActionButton>
 			</NcActions>
 		</div>
