@@ -212,7 +212,7 @@ class ContactController extends Controller {
 				$user = $this->userManager->get($circleMemberUserId);
 
 				if ($user === null) {
-					$this->logger->warning('Could not find user with user id' . $circleMemberUserId);
+					$this->logger->error('Could not find user with user id' . $circleMemberUserId);
 					throw new ServiceException('Could not find circle member');
 				}
 
