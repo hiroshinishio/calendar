@@ -20,16 +20,24 @@
 		</div>
 		<div class="invitees-list-item__actions">
 			<NcActions v-if="!isReadOnly && isSharedWithMe">
-				<NcActionButton v-for="person in organizerSelection"
-					v-show="!selectedOrganizer(person.address)"
-					:key="person.address"
-					:closeAfterClick = "true"
-					@click="changeOrganizer(person)">
-					<template #icon>
-						<Crown :size="20" />
-					</template>
-					{{ $t('calendar', 'Make {label} the organizer', {label: person.label}) }}
-				</NcActionButton>
+				<template v-for="person in organizerSelection">
+					<NcActionButton v-show="!selectedOrganizer(person.address)"
+						:closeAfterClick = "true"
+						@click="changeOrganizer(person, false)">
+						<template #icon>
+							<Crown :size="20" />
+						</template>
+						{{ $t('calendar', 'Make {label} the organizer', {label: person.label}) }}
+					</NcActionButton>
+					<NcActionButton v-show="!selectedOrganizer(person.address)"
+						:closeAfterClick = "true"
+						@click="changeOrganizer(person, true)">
+						<template #icon>
+							<Crown :size="20" />
+						</template>
+						{{ $t('calendar', 'Make {label} the organizer and attend', {label: person.label}) }}
+					</NcActionButton>
+				</template>
 			</NcActions>
 		</div>
 	</div>
@@ -106,8 +114,8 @@ export default {
 			}
 			return false
 		},
-		changeOrganizer(person) {
-			this.$emit('change-organizer', person)
+		changeOrganizer(person, attend) {
+			this.$emit('change-organizer', person, attend)
 		},
 	},
 }

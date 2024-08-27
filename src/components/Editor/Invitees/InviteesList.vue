@@ -250,21 +250,7 @@ export default {
 			return organizers
 		},
 		organizerSelected() {
-			let organizer = null
-			if (this.calendarObjectInstance.organizer !== null) {
-				const user = this.calendarObjectInstance.organizer
-				organizer = {
-					label: user.commonName,
-					address: removeMailtoPrefix(user.uri)
-				}
-			} else if (this.principalsStore.getCurrentUserPrincipal !== null) {
-				const user = this.principalsStore.getCurrentUserPrincipal
-				organizer = {
-					label: user.displayname,
-					address: user.emailAddress
-				}
-			}
-			return organizer
+			return this.selectedOrganizer
 		},
 		isListEmpty() {
 			return !this.calendarObjectInstance.organizer && this.invitees.length === 0
@@ -318,7 +304,40 @@ export default {
 		},
 	},
 	methods: {
-		changeOrganizer({ id, address, label }) {
+		selectedOrganizer() {
+			let organizer = null
+			if (this.calendarObjectInstance.organizer !== null) {
+				const user = this.calendarObjectInstance.organizer
+				organizer = {
+					label: user.commonName,
+					address: removeMailtoPrefix(user.uri)
+				}
+			} else if (this.principalsStore.getCurrentUserPrincipal !== null) {
+				const user = this.principalsStore.getCurrentUserPrincipal
+				organizer = {
+					label: user.displayname,
+					address: user.emailAddress
+				}
+			}
+			return organizer
+		},
+		changeOrganizer({ id, address, label }, attend) {
+			if (attend === true) {
+				const current = this.selectedOrganizer()
+				this.calendarObjectInstanceStore.addAttendee({
+					calendarObjectInstance: this.calendarObjectInstance,
+					commonName: current.label,
+					uri: current.address,
+					calendarUserType: 'INDIVIDUAL',
+					participationStatus: 'NEEDS-ACTION',
+					role: 'REQ-PARTICIPANT',
+					rsvp: true,
+					language: null,
+					timezoneId: null,
+					organizer: null,
+					member: null,
+				})
+			}
 			this.calendarObjectInstanceStore.setOrganizer({
 				calendarObjectInstance: this.calendarObjectInstance,
 				commonName: label,
