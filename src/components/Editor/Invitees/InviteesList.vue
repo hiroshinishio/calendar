@@ -322,22 +322,27 @@ export default {
 			return organizer
 		},
 		changeOrganizer({ id, address, label }, attend) {
+			// retrieve current organizer
+			const current = this.selectedOrganizer()
+			// remove new organizer from attendees
+			this.calendarObjectInstance.attendees.forEach(function(attendee) {
+				if (removeMailtoPrefix(attendee.uri) === address || removeMailtoPrefix(attendee.uri) === current.address) {
+					this.removeAttendee(attendee)
+				}
+			}, this)
+			// determine if current organizer needs to be converted to a attendee
 			if (attend === true) {
 				const current = this.selectedOrganizer()
-				this.calendarObjectInstanceStore.addAttendee({
-					calendarObjectInstance: this.calendarObjectInstance,
+				this.addAttendee({
 					commonName: current.label,
-					uri: current.address,
+					email: current.address,
 					calendarUserType: 'INDIVIDUAL',
-					participationStatus: 'NEEDS-ACTION',
-					role: 'REQ-PARTICIPANT',
-					rsvp: true,
 					language: null,
 					timezoneId: null,
-					organizer: null,
 					member: null,
 				})
 			}
+			// set new organizer
 			this.calendarObjectInstanceStore.setOrganizer({
 				calendarObjectInstance: this.calendarObjectInstance,
 				commonName: label,
@@ -359,7 +364,7 @@ export default {
 				organizer: this.principalsStore.getCurrentUserPrincipal,
 				member,
 			})
-			this.recentAttendees.push(email)
+			// this.recentAttendees.push(email)
 		},
 		removeAttendee(attendee) {
 			// Remove attendee from participating group
