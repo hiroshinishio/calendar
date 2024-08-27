@@ -21,7 +21,8 @@
 		<div class="invitees-list-item__actions">
 			<NcActions v-if="!isReadOnly && isSharedWithMe">
 				<template v-for="person in organizerSelection">
-					<NcActionButton v-show="!selectedOrganizer(person.address)"
+					<NcActionButton v-if="!selectedOrganizer(person.address)"
+						:key="person.address + '-1'"
 						:closeAfterClick = "true"
 						@click="changeOrganizer(person, false)">
 						<template #icon>
@@ -29,7 +30,8 @@
 						</template>
 						{{ $t('calendar', 'Make {label} the organizer', {label: person.label}) }}
 					</NcActionButton>
-					<NcActionButton v-show="!selectedOrganizer(person.address)"
+					<NcActionButton v-if="!selectedOrganizer(person.address)"
+						:key="person.address + '-2'"
 						:closeAfterClick = "true"
 						@click="changeOrganizer(person, true)">
 						<template #icon>
